@@ -43,4 +43,31 @@ class PhotosController < ApplicationController
 
     redirect_to("/photos/" + a_new_photo.id.to_s)
   end
+
+  def update
+    the_id = params.fetch("path_id")
+
+    matching_photos = Photo.where({:id => the_id})
+
+    the_photo = matching_photos.at(0)
+    the_photo.image = params.fetch("query_image")
+    the_photo.caption = params.fetch("query_caption")
+
+    the_photo.save
+
+    redirect_to("/photos/" +the_photo.id.to_s)
+  end
+
+  def create_comment
+    the_photo_id = params.fetch("path_id")
+
+    new_comment = Comment.new
+    new_comment.photo_id = the_photo_id
+    new_comment.body = params.fetch("query_comment")
+    new_comment.author_id = params.fetch("query_author_id")
+
+    new_comment.save
+
+    redirect_to("/photos/"+the_photo_id.to_s)
+  end
 end
